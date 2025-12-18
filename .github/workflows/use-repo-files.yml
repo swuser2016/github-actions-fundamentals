@@ -1,0 +1,44 @@
+name: Using Repository Files
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  without-checkout:
+    name: Without Checkout
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Try to list files (will be empty)
+        run: |
+          echo "Current directory:"
+          pwd
+          echo ""
+          echo "Files in directory:"
+          ls -la || echo "Directory is empty"
+  
+  with-checkout:
+    name: With Checkout
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      
+      - name: List repository files
+        run: |
+          echo "Current directory:"
+          pwd
+          echo ""
+          echo "Files in directory:"
+          ls -la
+          echo ""
+          echo "README content:"
+          cat README.md
+      
+      - name: Run the greeting script
+        run: |
+          chmod +x greet.sh
+          ./greet.sh
