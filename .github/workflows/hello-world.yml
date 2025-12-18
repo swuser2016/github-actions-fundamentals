@@ -1,22 +1,57 @@
-name: Hello World
+name: GitHub Context Demo
 
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  say-hello:
+  show-context:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Greet the world
-        run: echo "Hello, GitHub Actions!"
-      
-      - name: Show current date
-        run: date
-      
-      - name: Show runner information
+      - name: Display workflow information
         run: |
-          echo "Operating System: $RUNNER_OS"
-          echo "Architecture: $RUNNER_ARCH"
+          echo "======================================="
+          echo "     GITHUB ACTIONS CONTEXT INFO"
+          echo "======================================="
+          echo ""
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Run Number: ${{ github.run_number }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Triggered by: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo ""
+          echo "======================================="
+          echo "     REPOSITORY INFORMATION"
+          echo "======================================="
+          echo ""
+          echo "Repository: ${{ github.repository }}"
+          echo "Owner: ${{ github.repository_owner }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Full Ref: ${{ github.ref }}"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "Commit message: ${{ github.event.head_commit.message }}"
+      
+      - name: Display runner information
+        run: |
+          echo "======================================="
+          echo "     RUNNER INFORMATION"
+          echo "======================================="
+          echo ""
+          echo "Operating System: ${{ runner.os }}"
+          echo "Architecture: ${{ runner.arch }}"
+          echo "Temp directory: ${{ runner.temp }}"
+          echo "Workspace: ${{ runner.workspace }}"
+      
+      - name: Display job information
+        run: |
+          echo "======================================="
+          echo "     JOB INFORMATION"
+          echo "======================================="
+          echo ""
+          echo "Job ID: ${{ github.job }}"
+          echo "Server URL: ${{ github.server_url }}"
+          echo "API URL: ${{ github.api_url }}"
