@@ -1,0 +1,63 @@
+name: Interactive Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Your name'
+        required: true
+        default: 'GitHub User'
+      
+      greeting:
+        description: 'Greeting style'
+        type: choice
+        options:
+          - Formal
+          - Casual
+          - Enthusiastic
+        default: Casual
+      
+      include-timestamp:
+        description: 'Include timestamp?'
+        type: boolean
+        default: true
+      
+      repeat-count:
+        description: 'Number of times to repeat'
+        type: number
+        default: 1
+
+jobs:
+  greet-user:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Display inputs
+        run: |
+          echo "Received inputs:"
+          echo "  Name: ${{ github.event.inputs.name }}"
+          echo "  Greeting: ${{ github.event.inputs.greeting }}"
+          echo "  Include timestamp: ${{ github.event.inputs.include-timestamp }}"
+          echo "  Repeat count: ${{ github.event.inputs.repeat-count }}"
+      
+      - name: Generate formal greeting
+        if: github.event.inputs.greeting == 'Formal'
+        run: echo "Good day, ${{ github.event.inputs.name }}. How may I assist you today?"
+      
+      - name: Generate casual greeting
+        if: github.event.inputs.greeting == 'Casual'
+        run: echo "Hey ${{ github.event.inputs.name }}! What's up?"
+      
+      - name: Generate enthusiastic greeting
+        if: github.event.inputs.greeting == 'Enthusiastic'
+        run: echo "HELLO ${{ github.event.inputs.name }}!!! 🎉🎉🎉"
+      
+      - name: Repeat greeting
+        run: |
+          for i in $(seq 1 ${{ github.event.inputs.repeat-count }}); do
+            echo "Greeting #$i: Hello ${{ github.event.inputs.name }}!"
+          done
+      
+      - name: Show timestamp
+        if: github.event.inputs.include-timestamp == 'true'
+        run: echo "Current time: $(date)"
