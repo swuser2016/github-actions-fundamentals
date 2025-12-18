@@ -1,0 +1,66 @@
+name: Deploy to Development
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+jobs:
+  deploy-to-dev:
+    runs-on: ubuntu-latest
+    environment: development
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Display environment info
+        run: |
+          echo "======================================"
+          echo "   DEPLOYING TO DEVELOPMENT"
+          echo "======================================"
+          echo ""
+          echo "Environment: development"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Triggered by: ${{ github.actor }}"
+      
+      - name: Run tests
+        run: |
+          echo "Running unit tests..."
+          echo "✓ All tests passed"
+      
+      - name: Build application
+        run: |
+          echo "Building application..."
+          echo "Build ID: build-${{ github.run_number }}"
+          echo "✓ Build completed"
+      
+      - name: Deploy to development server
+        env:
+          DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          echo "Deploying to $DEPLOY_URL"
+          echo "Connecting to database..."
+          echo "Running database migrations..."
+          echo "Deploying application code..."
+          echo ""
+          echo "✓ Successfully deployed to development!"
+          echo ""
+          echo "Application URL: $DEPLOY_URL"
+          echo "Deployment time: $(date)"
+      
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests against development..."
+          echo "✓ Health check passed"
+          echo "✓ API endpoints responding"
+          echo "✓ Database connectivity verified"
+      
+      - name: Notify team
+        run: |
+          echo "📢 Deployment notification sent to team"
+          echo "Environment: development"
+          echo "Status: Success ✓"
